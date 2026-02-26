@@ -24,11 +24,11 @@ class Absensi extends Model
     ];
 
     public function user(){
-        return $this->belongssTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function lokasi(){
-        return $this->belongssTo(Lokasi::class);
+        return $this->belongsTo(Lokasi::class);
     }
 
 

@@ -18,7 +18,7 @@ class AuthController extends Controller
         //Log untuk debugging
         Log::info('='.str_repeat('=', 50));
         Log::info('REGISTER ATTEMPT');
-        log::info('Request Data: ', $request->all());
+        Log::info('Request Data: ', $request->all());
 
         try {
             // Validasi input
@@ -66,7 +66,7 @@ class AuthController extends Controller
             ], 422);
 
         } catch (\Exception $e) {
-            Log::error('Error during registration',$e->getMessage());
+            Log::error('Error during registration', $e->getMessage());
 
             return response()->json([
                 'success' => false,
@@ -84,8 +84,8 @@ class AuthController extends Controller
 
     public function login(Request $request){
         
-        log::info('='.str_repeat('=', 50));
-        log::info('LOGIN ATTEMPT:', ['email' =>$request->email]);
+        Log::info('='.str_repeat('=', 50));
+        Log::info('LOGIN ATTEMPT:', ['email' =>$request->email]);
 
         try{
             // Validasi input
@@ -98,7 +98,7 @@ class AuthController extends Controller
             $user = User::where('email', $validated['email'])->first();
 
             if(!$user){
-                log::warning('Login failed: User not found', ['email' => $validated['email']]);
+                Log::warning('Login failed: User not found', ['email' => $validated['email']]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Email tidak ditemukan'
@@ -107,7 +107,7 @@ class AuthController extends Controller
 
             // Cek password 
             if (!$user || !Hash::check($validated['password'], $user->password)) {
-                log::warning('Login failed: Incorrect password', ['email' => $validated['email']]);
+                Log::warning('Login failed: Incorrect password', ['email' => $validated['email']]);
                 return response()->json([
                     'success' => false,
                     'message' => 'Password salah'
@@ -138,7 +138,7 @@ class AuthController extends Controller
             ]);
 
         } catch (ValidationException $e) {
-            log::warning('Validation failed during login:', $e->errors());
+            Log::warning('Validation failed during login:', $e->errors());
 
             return response()->json([
                 'success' => false,
@@ -147,7 +147,7 @@ class AuthController extends Controller
             ], 422);
 
         } catch (\Exception $e) {
-            log::error('Error during login:', $e->getMessage());
+            Log::error('Error during login:', $e->getMessage());
 
             return response()->json([
                 'success' => false,
