@@ -186,4 +186,75 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function getUser(Request $request){
+
+        try{
+            //cek apakah user adalah admin
+            if ($request->user()->role !== 'admin') {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthorized'
+                ], 403);
+            }
+
+            // mengambil semua user
+            $users = User::select('id', 'name', 'email', 'role')
+                            ->orderBy('name')
+                            ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $users    
+            ]);
+        }
+        catch (\Exception $e) {
+            Log::error('Get users error:', $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil data users'
+            ], 500);
+        }
+    }
+
+    // delete user khusus admin
+    public function deleteUser($id){
+        try {
+            $user = User::find($id);
+
+            if (!$user) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User tidak ditemukan'
+                ], 404);
+            }
+
+            //agar tidak bisa menghapus dirinya sendiri
+            if (auth()->id() == $user->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak dapat menghapus diri sendiri'
+                ], 403);    
+            }
+
+            $user->delete();
+
+            Log::info('User deleted: ', ['id' => $id]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'User berhasil dihapus'
+            ]);
+        
+        } catch (\Exception $e) {
+            Log::error('Delete user error:', $e->getMessage());
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus user'
+            ], 500);
+        }
+    }
 }

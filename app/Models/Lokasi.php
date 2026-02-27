@@ -9,7 +9,8 @@ class Lokasi extends Model
 {
     use HasFactory;
 
-    protected $filable=[
+    protected $table = 'lokasis';
+    protected $fillable=[
         'user_id',
         'lokasi',
         'koordinat'
@@ -20,7 +21,7 @@ class Lokasi extends Model
 
     }
 
-    public function absensis(){
-        return $this->hasMany(Absensi::class);
-    }
+    // public function absensis(){
+    //     return $this->hasMany(Absensi::class);
+    // }
 }

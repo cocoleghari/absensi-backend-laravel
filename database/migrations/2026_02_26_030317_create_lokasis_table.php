@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('lokasis', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->String('lokasi');
-            $table->String('koordinat');
+            $table->foreignId('user_id')->constrained()->cascadeOnDeleteonDelete();
+            $table->string('lokasi');
+            $table->string('koordinat');
             $table->timestamps();
 
             //index untuk performa query
