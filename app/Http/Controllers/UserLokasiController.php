@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Absensi;
 use App\Models\Lokasi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
@@ -60,6 +61,7 @@ class UserLokasiController extends Controller
 
             Log::info('User ID: ' . $user->id);
             Log::info('Lokasi ID: ' . $lokasiId);
+            Log::info('Titik Koordinat Kamu: ' . $titikKoordinatKamu);
 
             if (!$lokasiId) {
                 return response()->json([
@@ -123,21 +125,64 @@ class UserLokasiController extends Controller
                     $baseUrl = config('app.url');
                     $fotoUrl = $baseUrl . Storage::url($path);
                     Log::info('Foto wajah berhasil diunggah: ' . $fotoUrl);
-                } 
+                } else {
+                    Log::error('Gagal menyimpan foto wajah');
+                }
 
             }else{
+
+                Log::warning('Tidakada foto wajah yang diunggah');
 
                 return response()->json([
                     'success' => false,
                     'message' => 'Foto wajah wajib diunggah'
                 ], 422);
             }
+            // simpan absen
+            try {
+                $absensi = new Absensi;
+                $absensi->user_id = $user->id;
+                $absensi->lokasi_id = $lokasi->id;
+                $absensi->tipe_absen = $tipe;
+                $absensi->waktu_absen = now();
+                $absensi->titik_koordinat_kamu = $titikKoordinatKamu;
+                $absensi->titik_koordinat_lokasi = $lokasi->koordinat;
+                $absensi->foto_wajah = $fotoUrl;
+                $absensi->save();
+
+                DB::commit();
+                Log::info('Absensi ' . $tipe . ' berhasil, ID = ' . $absensi->id);
+
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Absensi ' . $tipe . ' berhasil disimpan',
+                    'data' => [
+                        'id' => $absensi->id,
+                        'user_id' => $absensi->user_id,
+                        'lokasi_id' => $absensi->lokasi_id,
+                        'tipe_absen' => $absensi->tipe_absen,
+                        'waktu_absen' => $absensi->waktu_absen,
+                        'titik_koordinat_kamu' => $absensi->titik_koordinat_kamu,
+                        'foto_wajah' => $absensi->foto_wajah,
+                    ],
+                ], 201);
+     
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Error menyimpan absensi: ' . $e->getMessage(), ['exception' => $e]);
+                Log::error('Stack trace: ' . $e->getTraceAsString());
+                throw $e; // Rethrow untuk ditangani oleh catch utama
+            }
 
         } catch (\Exception $e) {
             Log::error('Error submit absensi: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
+                'success' => false,
                 'message' => 'Terjadi kesalahan saat menyimpan absensi: ' . $e->getMessage()
             ], 500);
+        } finally {
+            Log::info('=' .str_repeat('=', 50));
         }
     }
 

@@ -27,6 +27,17 @@ class AuthController extends Controller
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|string|min:6',
                 'role' => 'required|in:admin,user'
+            ],
+            
+            [
+                'name.required' => 'Nama harus diisi',
+                'email.required' => 'Email harus diisi',
+                'email.email' => 'Format email tidak valid',
+                'email.unique' => 'Email sudah terdaftar',
+                'password.required' => 'Password harus diisi',
+                'password.min' => 'Password minimal 6 karakter',
+                'role.required' => 'Role harus diisi',
+                'role.in' => 'Role harus admin atau user'
             ]);
 
             Log::info('Data tervalidasi: ', $validated);
