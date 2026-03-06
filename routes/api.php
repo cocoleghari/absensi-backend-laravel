@@ -47,8 +47,10 @@ use Illuminate\Support\Facades\Route;
         Route::get('/user/lokasi', [UserLokasiController::class, 'getUserLokasi']);
 
         // Absensi untuk user
-        Route::post('/user/absensi/masuk', [UserLokasiController::class, 'submitAbsenMasuk']);
-        Route::post('/user/absensi/pulang', [UserLokasiController::class, 'submitAbsenPulang']);
+        // Route::post('/user/absensi/masuk', [UserLokasiController::class, 'submitAbsenMasuk']);
+        // Route::post('/user/absensi/pulang', [UserLokasiController::class, 'submitAbsenPulang']);
+
+        Route::post('/user/absensi/otomatis', [UserLokasiController::class, 'submitAbsensiOtomatis']);
 
         // Riwayat dan status absensi
         Route::get('/user/absensi/riwayat', [UserLokasiController::class, 'getRiwayatAbsensi']);

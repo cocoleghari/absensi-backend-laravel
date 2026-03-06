@@ -209,7 +209,7 @@ class UserLokasiController extends Controller
             }
 
             DB::beginTransaction();
-            
+
             try {
                 $absensi = new Absensi;
                 $absensi->user_id = $user->id;
@@ -251,6 +251,27 @@ class UserLokasiController extends Controller
         }
     }
 
+    // rumus haversine
+    private function hitungJarak($lat1, $lon1, $lat2, $lon2){
+
+        $earthRadius = 6371000;
+
+        $latFrom = deg2rad($lat1);
+        $lonFrom = deg2rad($lon1);
+        $latTo = deg2rad($lat2);
+        $lonTo = deg2rad($lon2);
+
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+
+        return $angle * $earthRadius;
+
+
+
+    }
+
     public function getRiwayatAbsensi(Request $request){
         try {
             $userId = $request->user()->id;
@@ -265,6 +286,7 @@ class UserLokasiController extends Controller
         } catch (\Exception $e) {
             Log::error('Error get riwayat absensi: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
+                'succes' => false,
                 'message' => 'Terjadi kesalahan saat mengambil riwayat absensi: ' . $e->getMessage()
             ], 500);
         }
