@@ -19,4 +19,8 @@ class Pusat_Lokasi extends Model
 
     protected $casts = ['created_at' => 'datetime', 'updated_at' => 'datetime'];
 
+    // Mendapatkan latitud dan lngitud
+    // Log Pencarian
+    
+
 }
