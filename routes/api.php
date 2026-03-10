@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminAbsensiController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LokasiController;
+use App\Http\Controllers\PusatLokasiController;
 use App\Http\Controllers\UserLokasiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -67,6 +68,17 @@ use Illuminate\Support\Facades\Route;
         Route::get('/user/all', [AdminAbsensiController::class, 'getAllUsers']);
         Route::delete('/absensi/{id}', [AdminAbsensiController::class, 'deleteAbsensi']);
         Route::get('/absensi/statistics', [AdminAbsensiController::class, 'getStatistics']);
+
+
+        //Pusat Lokasi
+        Route::get('/pusat_lokasi/all', [PusatLokasiController::class, 'getAllLokasi']);
+        Route::get('/pusat_lokasi/{id}', [PusatLokasiController::class, 'getAllLokasiByID']);
+        Route::post('/pusat_lokasi', [PusatLokasiController::class, 'store']);
+        Route::put('/pusat_lokasi/{id}', [PusatLokasiController::class, 'update']);
+        Route::delete('/pusat_lokasi/{id}', [PusatLokasiController::class, 'destroy']);
+
+        
+
     });
 
     // Lokasi Routes (Admin dan User)

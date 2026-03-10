@@ -14,6 +14,16 @@ class AdminAbsensiController extends Controller
     public function getAllAbsensi(Request $request){
         
         try {
+
+
+            // ngecek admin atau bukan 
+            if($request->user()->role !== 'admin'){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akses ditolak, hanya bisa diakses oleh admin'
+                ], 403);
+            }          
+
             $query = Absensi::with(['user', 'lokasi']);
 
             if ($request->has('user_id') && $request->user_id && $request->user_id != '') {
@@ -41,6 +51,16 @@ class AdminAbsensiController extends Controller
 
     public function getAllUsers(Request $request){
         try {
+
+            // ngecek admin atau bukan 
+            if($request->user()->role !== 'admin'){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akses ditolak, hanya bisa diakses oleh admin'
+                ], 403);
+            } 
+
+
             $users = User::select('id', 'name', 'email')
                         -> where('role', 'user')
                         -> orderBy('name')  
@@ -65,6 +85,16 @@ class AdminAbsensiController extends Controller
 
     public function deleteAbsensi($id){
         try {
+
+            // ngecek admin atau bukan 
+            if(auth()->user()->role !== 'admin'){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akses ditolak, hanya bisa diakses oleh admin'
+                ], 403);
+            } 
+
+
             $absensi = Absensi::find($id);
 
             if (!$absensi) {
@@ -82,7 +112,7 @@ class AdminAbsensiController extends Controller
                     $pathParts= explode('/storage/foto_absensi', $url);
                     if (count($pathParts) > 1) {
                         $fileName = $pathParts[1];
-                        $stroragePath = 'public/foto_absensi' . $fileName;
+                        $stroragePath = 'public/foto_absensi/' . $fileName;
 
                         if (Storage::exists($stroragePath)) {
                             Storage::delete($stroragePath);
@@ -124,6 +154,14 @@ class AdminAbsensiController extends Controller
 
     public function getStatistics(Request $request){
         try {
+
+            // ngecek admin atau bukan 
+            if($request->user()->role !== 'admin'){
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Akses ditolak, hanya bisa diakses oleh admin'
+                ], 403);
+            } 
             
             $today = now()->toDateString();
 

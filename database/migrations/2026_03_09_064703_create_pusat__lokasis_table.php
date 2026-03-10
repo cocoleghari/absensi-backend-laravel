@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_lokasi');
             $table->string('titik_koordinat');
             $table->text('keterangan_lokasi')->nullable();
+            $table->timestamps();
         });
     }
 

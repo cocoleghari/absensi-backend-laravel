@@ -31,7 +31,11 @@ class UserLokasiController extends Controller
 
             Log::info('Jumlah lokasi ditemukan: ' . $lokasis->count());
 
-            return response()->json($lokasis);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menampilkan lokasi user',
+                'data' => $lokasis
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Error get user lokasi: ' . $e->getMessage());
@@ -281,7 +285,11 @@ class UserLokasiController extends Controller
                                 ->orderBy('waktu_absen', 'desc')
                                 ->get();
 
-            return response()->json($absensis);
+            return response()->json([
+                'success' => true,
+                'message' => 'Berhasil menampilkan riwayat absensi',
+                'data'    => $absensis
+            ]);
 
         } catch (\Exception $e) {
             Log::error('Error get riwayat absensi: ' . $e->getMessage(), ['exception' => $e]);
