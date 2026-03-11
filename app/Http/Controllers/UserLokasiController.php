@@ -47,6 +47,7 @@ class UserLokasiController extends Controller
         }
     }
 
+
     public function submitAbsensiOtomatis(Request $request){
         Log::info('-' .str_repeat('-', 50));
         Log::info('SUBMIT ABSENSI OTOMATIS');
@@ -87,9 +88,9 @@ class UserLokasiController extends Controller
                 ],400 );
             }
 
-            if ($tipe == 'pulang') {
+            if ($tipe == 'pulang') { //apakah sudah pulang ? => apakah sudah masuk ?
                 $sudahMasuk = Absensi::where('user_id', $user->id)
-                                    ->where('tipe_absen', $tipe)
+                                    ->where('tipe_absen', 'masuk')
                                     ->whereDate('waktu_absen', now()->toDateString())
                                     ->exists();
                 if (! $sudahMasuk) {
@@ -132,8 +133,8 @@ class UserLokasiController extends Controller
                     continue;
                 }
 
-                $lokasiLat = floatval(trim($userPaths[0]));
-                $lokasiLng = floatval(trim($userPaths[1]));    
+                $lokasiLat = floatval(trim($lokasiParts[0]));
+                $lokasiLng = floatval(trim($lokasiParts[1]));    
 
                 $jarak = $this->hitungJarak($userLat, $userLng, $lokasiLat, $lokasiLng);
 
@@ -164,7 +165,7 @@ class UserLokasiController extends Controller
 
                 return response()->json([
                     'success' => false,
-                    'message' => 'Anda berada dalam jangkauan absen',
+                    'message' => 'Anda berada diluar jangkauan absen',
                     'data' => [
                         'jarak_terdekat' => round($jarakTerdekat, 2),
                         'batas_radius' => 100,
@@ -190,7 +191,7 @@ class UserLokasiController extends Controller
                 }
 
                 // Generate nama file unik
-                $filename = $tipe . '_' . time() . '.' . $user->id . '.' . $extension;
+                $filename = $tipe . '_' . time() . '_' . $user->id . '.' . $extension;
 
                 $path = $file->storeAs('public/foto_absensi', $filename);
 
@@ -218,7 +219,7 @@ class UserLokasiController extends Controller
                 $absensi = new Absensi;
                 $absensi->user_id = $user->id;
                 $absensi->lokasi_id = $lokasiTerpilih['id'];
-                $absensi->titik_koordinat_lokasi = $lokasiTerpilih['id'];
+                $absensi->titik_koordinat_lokasi = $lokasiTerpilih['koordinat'];
                 $absensi->titik_koordinat_kamu = $titikKoordinatKamu;
                 $absensi->foto_wajah = $fotoUrl;
                 $absensi->tipe_absen = $tipe;
