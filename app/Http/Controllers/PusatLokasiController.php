@@ -24,7 +24,7 @@ class PusatLokasiController extends Controller
                 'message' => 'Data berhasil ditampilkan',
                 'data'     => $pusat_lokasi
 
-            ], 201);
+            ]);
         } 
         
         catch (\Exception $e) {
@@ -83,7 +83,7 @@ class PusatLokasiController extends Controller
                 'message' => 'Data berhasil ditambahkan',
                 'data'     => $pusat_lokasi
 
-            ], 201);
+            ],201);
         } 
         
         catch (\Exception $e) {

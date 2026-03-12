@@ -60,6 +60,7 @@ use Illuminate\Support\Facades\Route;
 
     // Admin Routes
     Route::middleware('auth:sanctum', 'role:admin')->prefix('admin')->group(function () {
+        
         Route::get('/users', [AuthController::class, 'getUser']);
         Route::delete('/users/{id}', [AuthController::class, 'deleteUser']);
 
@@ -76,6 +77,11 @@ use Illuminate\Support\Facades\Route;
         Route::post('/pusat_lokasi', [PusatLokasiController::class, 'store']);
         Route::put('/pusat_lokasi/{id}', [PusatLokasiController::class, 'update']);
         Route::delete('/pusat_lokasi/{id}', [PusatLokasiController::class, 'destroy']);
+
+        // Lokasi user
+         Route::post('/lokasi', [LokasiController::class, 'store']);
+         Route::delete('/lokasi/{id}', [LokasiController::class, 'destroy']);
+
 
         
 
